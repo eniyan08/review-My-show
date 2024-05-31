@@ -1,0 +1,29 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+frontend/node_modules/
+
+# Build output
+build/
+dist/
+
+# Environment variables
+.env
+
+# Python
+*.pyc
+__pycache__/
+instance/
+.pytest_cache/
+
+# Environment variables
+.env
+backend/venv/
+# Flask specific
+*.log
+*.pot
+*.py[cod]
+*.sqlite3

@@ -1,0 +1,9 @@
+frontend
+
+cd frontend
+npm run start
+
+backend
+
+cd backend
+venv\Scripts\activate
