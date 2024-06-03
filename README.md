@@ -6,6 +6,16 @@ Hey there...! Review My Show is a web application designed to provide a platform
 
 Movie data is fetched from The Movie Database (TMDB) API and stored in MongoDB. Users can browse through various movies, read public reviews, and contribute their own reviews. This application aims to provide a centralized platform for movie enthusiasts to share their opinions and find out what others think about a movie.
 
+## Features
+
+# Browse Movies:
+    View detailed information about movies fetched from the TMDB API.
+# User Reviews: 
+    Post your own reviews and read reviews from other users.
+# Real-Time Updates: 
+    Enjoy a seamless experience with real-time updates without page reloads.
+# Responsive Design: 
+    Access the platform from any device with a responsive UI built using React
 ## Pre-requisites
 
 - Node.js
