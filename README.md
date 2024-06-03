@@ -2,7 +2,9 @@
 
 ## Description
 
-This is a web project created using React for the frontend, Flask for the backend, and MongoDB for the database.
+Hey there...! Review My Show is a web application designed to provide a platform for users to discover and review movies. The project leverages React for the frontend, Flask for the backend, and MongoDB for the database.
+
+Movie data is fetched from The Movie Database (TMDB) API and stored in MongoDB. Users can browse through various movies, read public reviews, and contribute their own reviews. This application aims to provide a centralized platform for movie enthusiasts to share their opinions and find out what others think about a movie.
 
 ## Pre-requisites
 
@@ -49,7 +51,7 @@ This is a web project created using React for the frontend, Flask for the backen
 3. Activate the virtual environment.
 
       ```bash
-      venv\Scripts\activate
+      venv/Scripts/activate
       ```
 
 4. Install dependencies.
@@ -57,8 +59,13 @@ This is a web project created using React for the frontend, Flask for the backen
     ```bash
     pip install -r requirements.txt
     ```
+5. Fetch the Movie Data from TMDB.
 
-5. Start the Flask server.
+    ```bash
+    python fetch_and_store.py
+    ```
+
+6. Start the Flask server.
 
     ```bash
     python app.py
