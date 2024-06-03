@@ -11,7 +11,6 @@ const Login = () => {
         password: ''
     })
 
-    const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState({})
     const navigate = useNavigate();
 
@@ -39,7 +38,7 @@ const Login = () => {
         else {
             try {
                 const response = await axios.post('http://localhost:5000/auth/', form);
-                setSuccess(response.data.message);
+                localStorage.setItem('username', response.data)
                 setForm({
                     username_or_email: '',
                     password: ''
@@ -65,10 +64,9 @@ const Login = () => {
                 </div>
 
                 <h2 className="text-md mt-4 font-semibold mb-2 text-gray-600 text-start">Login to your account</h2>
-                {success && <p className="text-green-500">{success}</p>}
+
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-
                         <input
                             type="text"
                             id="username_or_email"
@@ -82,7 +80,6 @@ const Login = () => {
                     </div>
 
                     <div className="mb-4">
-
                         <input
                             type="password"
                             id="password"
@@ -99,12 +96,9 @@ const Login = () => {
                     </button>
                     <div></div>
                     <p className="block text-md font-medium text-gray-600 py-4">Don't have an account?</p>
-
                     <Link to='/signup' className="block w-full bg-blue-500 text-center text-white py-2 rounded-md">
                         Sign Up
                     </Link>
-
-
                     {errors.server && <p className="text-red-500 text-sm mt-4">{errors.server}</p>}
                 </form>
             </div>

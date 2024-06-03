@@ -1,10 +1,12 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useCallback } from 'react';
 // axios
 import axios from 'axios';
 
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+
+
     // Home data
     const [popularMovies, setPopularMovies] = useState(() => {
         const savedPopularMoviesData = localStorage.getItem('popularMovies');
@@ -67,178 +69,99 @@ export const DataProvider = ({ children }) => {
         return savedSfShows ? JSON.parse(savedSfShows) : null;
     })
 
+
     const [loading, setLoading] = useState({
-        popularMovies: false,
-        premiereShows: false,
-        popularTvshows: false,
-        anime: false
+        homeData: false,
+        movieData: false,
+        tvData: false,
+
     });
-
-
-    // Home Effect
-    useEffect(() => {
-        if (popularMovies) {
-            localStorage.setItem('popularMovies', JSON.stringify(popularMovies));
-        }
-    }, [popularMovies]);
-
-    useEffect(() => {
-        if (premiereShows) {
-            localStorage.setItem('premiereShows', JSON.stringify(premiereShows));
-        }
-    }, [premiereShows]);
-
-    useEffect(() => {
-        if (popularTvshows) {
-            localStorage.setItem('popularTvshows', JSON.stringify(popularTvshows));
-        }
-    }, [popularTvshows]);
-
-    useEffect(() => {
-        if (anime) {
-            localStorage.setItem('anime', JSON.stringify(anime));
-        }
-    }, [anime]);
-
-    // Movie Effect
-    useEffect(() => {
-        if (actionMovies) {
-            localStorage.setItem('actionMovies', JSON.stringify(actionMovies));
-        }
-    }, [actionMovies]);
-
-    useEffect(() => {
-        if (comedyMovies) {
-            localStorage.setItem('comedyMovies', JSON.stringify(comedyMovies));
-        }
-    }, [comedyMovies]);
-
-    useEffect(() => {
-        if (crimeMovies) {
-            localStorage.setItem('crimeMovies', JSON.stringify(crimeMovies));
-        }
-    }, [crimeMovies]);
-
-    useEffect(() => {
-        if (horrorMovies) {
-            localStorage.setItem('horrorMovies', JSON.stringify(horrorMovies));
-        }
-    }, [horrorMovies]);
-
-    useEffect(() => {
-        if (sfMovies) {
-            localStorage.setItem('sfMovies', JSON.stringify(sfMovies));
-        }
-    }, [sfMovies]);
-
-    // TV Show Effect
-    useEffect(() => {
-        if (actionShows) {
-            localStorage.setItem('actionShows', JSON.stringify(actionShows));
-        }
-    }, [actionShows]);
-
-    useEffect(() => {
-        if (comedyShows) {
-            localStorage.setItem('comedyShows', JSON.stringify(comedyShows));
-        }
-    }, [comedyShows]);
-
-    useEffect(() => {
-        if (crimeShows) {
-            localStorage.setItem('crimeShows', JSON.stringify(crimeShows));
-        }
-    }, [crimeShows]);
-
-    useEffect(() => {
-        if (horrorShows) {
-            localStorage.setItem('horrorShows', JSON.stringify(horrorShows));
-        }
-    }, [horrorShows]);
-
-    useEffect(() => {
-        if (sfShows) {
-            localStorage.setItem('sfShows', JSON.stringify(sfShows));
-        }
-    }, [sfShows]);
 
 
     const fetchData = useCallback(async (type) => {
         // Home
-        if (type === 'popularMovies' && !popularMovies) {
-            setLoading((prev) => ({ ...prev, popularMovies: true }));
-            const response = await axios.get('http://localhost:5000/api/movies');
-            localStorage.setItem('popularMovies', JSON.stringify(response.data));
-            setPopularMovies(response.data);
+        if (type === 'HomeData' && !popularMovies && !premiereShows && !popularTvshows && !anime) {
+            setLoading((prev) => ({ ...prev, homeData: true }));
 
-            setLoading((prev) => ({ ...prev, popularMovies: false }));
+            const movieResponse = await axios.get('http://localhost:5000/api/movies');
+            const premiereResponse = await axios.get('http://localhost:5000/api/premiere');
+            const tvResponse = await axios.get('http://localhost:5000/api/tv_shows');
+            const animeResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/16');
 
-        } else if (type === 'premiereShows' && !premiereShows) {
-            setLoading((prev) => ({ ...prev, premiereShows: true }));
-            const response = await axios.get('http://localhost:5000/api/premiere');
-            localStorage.setItem('premiereShows', JSON.stringify(response.data));
-            setPremiereShows(response.data);
+            localStorage.setItem('popularMovies', JSON.stringify(movieResponse.data));
+            localStorage.setItem('premiereShows', JSON.stringify(premiereResponse.data));
+            localStorage.setItem('popularTvshows', JSON.stringify(tvResponse.data));
+            localStorage.setItem('anime', JSON.stringify(animeResponse.data));
 
-            setLoading((prev) => ({ ...prev, premiereShows: false }));
+            setPopularMovies(movieResponse.data);
+            setPremiereShows(premiereResponse.data);
+            setPopularTvshows(tvResponse.data);
+            setAnime(animeResponse.data);
 
-        } else if (type === 'popularTvshows' && !popularTvshows) {
-            setLoading((prev) => ({ ...prev, popularTvshows: true }));
-            const response = await axios.get('http://localhost:5000/api/tv_shows');
-            localStorage.setItem('popularTvshows', JSON.stringify(response.data));
-            setPopularTvshows(response.data);
-
-            setLoading((prev) => ({ ...prev, popularTvshows: false }));
-
-        } else if (type === 'anime' && !anime) {
-            setLoading((prev) => ({ ...prev, anime: true }));
-            const response = await axios.get('http://localhost:5000/api/tv_shows/genre/16');
-            localStorage.setItem('anime', JSON.stringify(response.data))
-            setAnime(response.data);
-
-            setLoading((prev) => ({ ...prev, anime: false }));
+            setLoading((prev) => ({ ...prev, homeData: false }));
 
         }
+
         // Movie 
-        else if (type === 'actionMovies' && !actionMovies) {
-            const response = await axios.get('http://localhost:5000/api/movies/genre/28');
-            setActionMovies(response.data);
-        } else if (type === 'comedyMovies' && !comedyMovies) {
-            const response = await axios.get('http://localhost:5000/api/movies/genre/35');
-            setComedyMovies(response.data);
-        } else if (type === 'crimeMovies' && !crimeMovies) {
-            const response = await axios.get('http://localhost:5000/api/movies/genre/80');
-            setCrimeMovies(response.data);
-        } else if (type === 'horrorMovies' && !horrorMovies) {
-            const response = await axios.get('http://localhost:5000/api/movies/genre/27');
-            setHorrorMovies(response.data);
-        } else if (type === 'sfMovies' && !sfMovies) {
-            const response = await axios.get('http://localhost:5000/api/movies/genre/878');
-            setSfMovies(response.data);
+        else if (type === 'MovieData' && !actionMovies && !comedyMovies && !crimeMovies && !horrorMovies && !sfMovies) {
+            setLoading((prev) => ({ ...prev, movieData: true }));
+
+            const actionResponse = await axios.get('http://localhost:5000/api/movies/genre/28');
+            const comedyResponse = await axios.get('http://localhost:5000/api/movies/genre/35');
+            const crimeResponse = await axios.get('http://localhost:5000/api/movies/genre/80');
+            const horrorResponse = await axios.get('http://localhost:5000/api/movies/genre/27');
+            const sfResponse = await axios.get('http://localhost:5000/api/movies/genre/878');
+
+            localStorage.setItem('actionMovies', JSON.stringify(actionResponse.data));
+            localStorage.setItem('comedyMovies', JSON.stringify(comedyResponse.data));
+            localStorage.setItem('crimeMovies', JSON.stringify(crimeResponse.data));
+            localStorage.setItem('horrorMovies', JSON.stringify(horrorResponse.data));
+            localStorage.setItem('sfMovies', JSON.stringify(sfResponse.data));
+
+            setActionMovies(actionResponse.data);
+            setComedyMovies(comedyResponse.data);
+            setCrimeMovies(crimeResponse.data);
+            setHorrorMovies(horrorResponse.data);
+            setSfMovies(sfResponse.data);
+
+            setLoading((prev) => ({ ...prev, movieData: false }));
+
         }
+
         // TV Show
-        else if (type === 'actionShows' && !actionShows) {
-            const response = await axios.get('http://localhost:5000/api/tv_shows/genre/10759');
-            setActionShows(response.data);
-        } else if (type === 'comedyShows' && !comedyShows) {
-            const response = await axios.get('http://localhost:5000/api/tv_shows/genre/35');
-            setComedyShows(response.data);
-        } else if (type === 'crimeShows' && !crimeShows) {
-            const response = await axios.get('http://localhost:5000/api/tv_shows/genre/80');
-            setCrimeShows(response.data);
-        } else if (type === 'horrorShows' && !horrorShows) {
-            const response = await axios.get('http://localhost:5000/api/tv_shows/genre/10768');
-            setHorrorShows(response.data);
-        } else if (type === 'sfShows' && !sfShows) {
-            const response = await axios.get('http://localhost:5000/api/tv_shows/genre/10765');
-            setSfShows(response.data);
+        else if (type === 'TV' && !actionShows && !comedyShows && !crimeShows && !horrorShows && !sfShows) {
+            setLoading((prev) => ({ ...prev, tvData: true }));
+
+            const actionShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/10759');
+            const comedyShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/35');
+            const crimeShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/80');
+            const horrorShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/10768');
+            const sfShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/10765');
+
+            localStorage.setItem('actionShows', JSON.stringify(actionShowsResponse.data));
+            localStorage.setItem('comedyShows', JSON.stringify(comedyShowsResponse.data));
+            localStorage.setItem('crimeShows', JSON.stringify(crimeShowsResponse.data));
+            localStorage.setItem('horrorShows', JSON.stringify(horrorShowsResponse.data));
+            localStorage.setItem('sfShows', JSON.stringify(sfShowsResponse.data));
+
+            setActionShows(actionShowsResponse.data);
+            setComedyShows(comedyShowsResponse.data);
+            setCrimeShows(crimeShowsResponse.data);
+            setHorrorShows(horrorShowsResponse.data);
+            setSfShows(sfShowsResponse.data);
+
+            setLoading((prev) => ({ ...prev, tvData: false }));
         }
+
     }, [popularMovies, premiereShows, popularTvshows, anime, actionMovies, comedyMovies, crimeMovies, horrorMovies, sfMovies, actionShows, comedyShows, crimeShows, horrorShows, sfShows])
 
     const clearData = useCallback(() => {
-        localStorage.removeItem('popularMovies');
-        localStorage.removeItem('premiereShows');
-        localStorage.removeItem('popularTvshows');
-        localStorage.removeItem('anime');
+        localStorage.clear()
+        // localStorage.removeItem('username')
+        // localStorage.removeItem('popularMovies');
+        // localStorage.removeItem('premiereShows');
+        // localStorage.removeItem('popularTvshows');
+        // localStorage.removeItem('anime');
         // localStorage.removeItem('actionMovies');
         // localStorage.removeItem('comedyMovies');
         // localStorage.removeItem('crimeMovies');
@@ -253,6 +176,17 @@ export const DataProvider = ({ children }) => {
         setPremiereShows(null);
         setPopularTvshows(null);
         setAnime(null);
+        setActionMovies(null)
+        setComedyMovies(null)
+        setCrimeMovies(null)
+        setHorrorMovies(null)
+        setSfMovies(null)
+        setActionShows(null)
+        setComedyShows(null)
+        setCrimeShows(null)
+        setHorrorShows(null)
+        setSfShows(null)
+
     }, []);
 
     return (

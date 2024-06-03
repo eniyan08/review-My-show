@@ -1,4 +1,5 @@
 import React from "react";
+// component
 import Navbar from "../components/Navbar/navbar.component";
 
 const DefaultLayout = ({ children }) => {

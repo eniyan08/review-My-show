@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
-// icons
+// react-icons
 import { BiSearch } from "react-icons/bi"
 import { MdMenu } from "react-icons/md";
 // components
@@ -17,6 +17,7 @@ const NavLg = () => {
         clearData()
         navigate('/')
     }
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
 
@@ -52,7 +53,7 @@ const NavLg = () => {
 
                         <div className="w-full flex items-center pl-2 bg-white gap-3 px-2 py-2 rounded-md">
                             <BiSearch type="button" />
-                            <input type="search" className="w-full focus:outline-none   " placeholder="Search for Movies, TV Shows, Series and Drama" />
+                            <input type="search" className="w-full focus:outline-none" placeholder="Search for Movies, TV Shows, Series and Drama" />
                         </div>
                     </div>
 
@@ -86,7 +87,6 @@ const Navbar = () => {
     return (
         <>
             <div className="hidden lg:block">
-                {/* Large Screen */}
                 <NavLg />
             </div>
         </>

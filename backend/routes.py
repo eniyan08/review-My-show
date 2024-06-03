@@ -9,11 +9,13 @@ from models import insert_user, find_user_by_username_or_email, check_password
 # db
 client = MongoClient(Config.MONGO_URI)
 movie_db = client[Config.MOVIE_DB_NAME]
+interaction_db = client[Config.INTERACTION_DB_NAME]
 # collections
 movies_collection = movie_db['movies']
 tv_shows_collection = movie_db['tv_shows']
 premiere_collection = movie_db['premiere']
 top_rated_movies_collection = movie_db['top_rated_movies']
+interactions_collection = interaction_db['interactions']
 
 # routes
 # 1
@@ -30,7 +32,7 @@ def signup():
         return jsonify({'message': 'Missing required fields'}), 400
 
     if find_user_by_username_or_email(username) or find_user_by_username_or_email(email):
-        return jsonify({'message': 'User already exists'}), 409
+        return jsonify({'message': 'Username or email already exists'}), 409
 
     insert_user(username, email, password)
     return jsonify({'message': 'User registered successfully'}), 201
@@ -48,7 +50,8 @@ def login():
     if not user or not check_password(user['password'], password):
         return jsonify({'message': 'Invalid username/email or password'}), 401
 
-    return jsonify({'message': 'Login successful'}), 200
+    return user['username']
+    # return jsonify({'message': 'Login successful'}), 200
 
 # 2
 tmdb_api_blueprint = Blueprint('api', __name__)
@@ -61,7 +64,7 @@ def get_movies():
 
 @tmdb_api_blueprint.route('/tv_shows', methods=['GET'])
 def get_tv_shows():
-    tv_shows = list(tv_shows_collection.find({}, {'_id': 0}))
+    tv_shows = list(tv_shows_collection.find({'genre_ids':{"$in": [10751,10766,10767,99,18,37]}}, {'_id': 0}))
     return jsonify(tv_shows)
 
 @tmdb_api_blueprint.route('/premiere', methods=['GET'])
@@ -88,8 +91,70 @@ def get_tv_show_by_genre(genre_id):
 info_blueprint = Blueprint('/info', __name__)
 @info_blueprint.route('/<int:id>', methods=['GET'])
 def get_info(id):
-        movie_details = list(movies_collection.find({'id':id}, {'_id': 0}))
-        print("data:",jsonify(movie_details))
-        return jsonify(movie_details)
+        movie_details = movies_collection.find_one({'id':id}, {'_id': 0})
+        tv_show_details = tv_shows_collection.find_one({"id":id}, {'_id': 0})
+        if movie_details:
+            return jsonify(movie_details)
+        elif tv_show_details:
+            return jsonify(tv_show_details)
 
-    
+@info_blueprint.route('/comment/<int:id>', methods=['GET'])
+def get_comment(id):
+    interaction = interactions_collection.find_one({"movie_id": str(id)}, {'_id':0})
+    if interaction:
+        comments = interaction.get('comments', [])
+        for comment in comments:
+            comment['comment_id'] = str(comment['comment_id'])
+        return jsonify(comments), 200
+    else:
+        return jsonify([]), 200
+
+@info_blueprint.route('/comment', methods=['POST'])
+def post_comment():
+    data = request.json
+    print("data:", data)
+    movie_id = data['movie_id']
+    username = data['username']
+    text = data['text']
+
+    comment = {
+        "comment_id": ObjectId(),
+        "user_id": username,
+        "text": text,
+        "likes": 0,
+        "dislikes": 0
+    }
+
+    interactions_collection.update_one(
+        {"movie_id": movie_id},
+        {"$push": {"comments": comment}},
+        upsert=True
+    )
+
+    return jsonify({"message": "Comment added"}), 201
+
+@info_blueprint.route('/comment/like', methods=['POST'])
+def like_comment():
+    data = request.get_json()
+    movie_id = data['movie_id']
+    comment_id = data['comment_id']
+
+    interactions_collection.update_one(
+        {"movie_id": movie_id, "comments.comment_id": ObjectId(comment_id)},
+        {"$inc": {"comments.$.likes": 1}}
+    )
+
+    return jsonify({"message": "Comment liked"}), 200
+
+@info_blueprint.route('/comment/dislike', methods=['POST'])
+def dislike_comment():
+    data = request.get_json()
+    movie_id = data['movie_id']
+    comment_id = data['comment_id']
+
+    interactions_collection.update_one(
+        {"movie_id": movie_id, "comments.comment_id": ObjectId(comment_id)},
+        {"$inc": {"comments.$.dislikes": 1}}
+    )
+
+    return jsonify({"message": "Comment disliked"}), 200

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// axios
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
@@ -12,6 +13,7 @@ const Sign_Up = () => {
 
     const [errors, setErrors] = useState({});
     const [success, setSuccess] = useState('');
+
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -34,7 +36,16 @@ const Sign_Up = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // e.preventDefault() is called to prevent the default behavior of the form submission, 
+        // which would normally cause the page to reload. This allows you to handle the form submission with JavaScript instead.
+
         const validationErrors = validate();
+
+        // This line calls a function named validate and stores its return value in the validationErrors constant.
+        // The validate function is expected to check the form's input fields for any errors (such as missing required fields, incorrect formats, etc.) 
+        // and return an object containing any validation errors it finds.
+
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {

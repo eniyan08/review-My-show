@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 import bcrypt
-import requests
 from config import Config
 
 TMDB_API_KEY = Config.TMDB_API_KEY

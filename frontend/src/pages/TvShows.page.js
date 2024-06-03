@@ -6,39 +6,23 @@ import { DataContext } from '../context/Data.context';
 
 const Tv_shows = () => {
 
-    const { actionShows, comedyShows, crimeShows, horrorShows, sfShows, fetchData } = useContext(DataContext)
+    const { actionShows, comedyShows, crimeShows, horrorShows, sfShows, fetchData, loading } = useContext(DataContext)
 
     useEffect(() => {
-        if (!actionShows) {
-            fetchData('actionShows');
+        if (!actionShows || !comedyShows || !crimeShows || !horrorShows || !sfShows) {
+            fetchData('TV')
         }
-    }, [actionShows, fetchData]);
+    }, [actionShows, comedyShows, crimeShows, horrorShows, sfShows, fetchData]);
 
-    useEffect(() => {
-        if (!comedyShows) {
-            fetchData('comedyShows');
-        }
-    }, [comedyShows, fetchData]);
 
-    useEffect(() => {
-        if (!crimeShows) {
-            fetchData('crimeShows');
-        }
-    }, [crimeShows, fetchData]);
+    if (loading.tvData) {
+        return <div className='mt-28'><p>Loading...</p></div>;
+    }
 
-    useEffect(() => {
-        if (!horrorShows) {
-            fetchData('horrorShows');
-        }
-    }, [horrorShows, fetchData]);
+    if (!actionShows) {
+        return <div className='mt-28'><p>No data available</p></div>;
+    }
 
-    useEffect(() => {
-        if (!sfShows) {
-            fetchData('sfShows');
-        }
-    }, [sfShows, fetchData]);
-
-    if (!actionShows) return <div>Loading...</div>;
     return (
         <>
             <div className='container mx-auto mt-28 pt-4 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2  '>

@@ -4,7 +4,6 @@ from flask_cors import CORS
 # modules
 from config import Config
 from routes import auth_blueprint, tmdb_api_blueprint, info_blueprint
-from pymongo import MongoClient
 
 app = Flask(__name__)
 CORS(app)

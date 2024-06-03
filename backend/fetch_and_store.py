@@ -20,7 +20,6 @@ top_rated_movies_collection = movie_db['top_rated_movies']
 
 def fetch_data(endpoint, params):
     response = requests.get(f"{TMDB_BASE_URL}/{endpoint}", params=params, proxies={"http": None, "https": None})
-    # print("Here is the response::::", response)
     response.raise_for_status()
     return response.json()['results']
 
@@ -36,12 +35,13 @@ def fetch_and_store():
         tv_shows_collection.insert_many(tv_shows)
     
     premieres = fetch_data('movie/upcoming', {'api_key': TMDB_API_KEY, 'page': 1})
-    # premieres.extend(fetch_data('movie/upcoming', {'api_key': TMDB_API_KEY, 'page': 2}))
     premiere_collection.insert_many(premieres)
 
     top_rated_movies = fetch_data('movie/top_rated', {'api_key': TMDB_API_KEY, 'page': 1})
     top_rated_movies_collection.insert_many(top_rated_movies)
 
     print("Data fetched successfully")
+
+    return jsonify({"message":"Movies added successfully"}), 201
 
 fetch_and_store()

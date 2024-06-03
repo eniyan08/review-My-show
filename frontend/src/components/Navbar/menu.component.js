@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+// react-icons
 import { AiOutlineBell, AiOutlineRight } from 'react-icons/ai';
 import { RiYoutubeLine } from 'react-icons/ri';
 import { IoTicket, IoSettingsOutline, IoGiftOutline } from 'react-icons/io5';
@@ -21,6 +22,7 @@ const Menu = (props) => {
                     </div>
                     <div className='flex bg-white px-3 py-3 '>
                         <img src='https://in.bmscdn.com/webin/movies/superstar/rewards_login.png'
+                            alt="gift box"
                             className='rounded-full w-10 h-10 mt-1' />
                         <div className='flex flex-col px-3'>
                             <h3 className='text-gray-900'>Unlock special offers &</h3>

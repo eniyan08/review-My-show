@@ -4,7 +4,7 @@ logs
 npm-debug.log*
 
 # Dependency directories
-frontend/node_modules/
+node_modules/
 
 # Build output
 build/
@@ -12,6 +12,7 @@ dist/
 
 # Environment variables
 .env
+/venv
 
 # Python
 *.pyc
