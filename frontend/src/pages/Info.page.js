@@ -55,10 +55,19 @@ const Info = () => {
     }, [id]);
 
     // -------------------------------------------------------------------------------------------------------------------------------
-
+    const token = localStorage.getItem('token');
     const handlePostComment = async () => {
-        await axios.post('http://localhost:5000/info/comment', { movie_id: id, username: username, text: commentText })
+        await axios.post('http://localhost:5000/info/comment', {
+            movie_id: id, username: username, text: commentText
+        },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
             .then(response => {
+                console.log(response)
                 const fetchComments = async () => {
                     try {
                         const response = await axios.get(`http://localhost:5000/info/comment/${id}`)
@@ -79,7 +88,11 @@ const Info = () => {
     // -----------------------------------------------------------------------------------------------------------------------
 
     const handleLikeComment = async (commentId) => {
-        await axios.post('http://localhost:5000/info/comment/like', { movie_id: id, comment_id: commentId })
+        await axios.post('http://localhost:5000/info/comment/like', { movie_id: id, comment_id: commentId }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(response => {
                 setComments(comments.map(comment => {
                     if (comment.comment_id === commentId) {
@@ -94,7 +107,11 @@ const Info = () => {
     // -------------------------------------------------------------------------------------------------------------------------
 
     const handleDislikeComment = async (commentId) => {
-        await axios.post('http://localhost:5000/info/comment/dislike', { movie_id: id, comment_id: commentId })
+        await axios.post('http://localhost:5000/info/comment/dislike', { movie_id: id, comment_id: commentId }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(response => {
                 setComments(comments.map(comment => {
                     if (comment.comment_id === commentId) {

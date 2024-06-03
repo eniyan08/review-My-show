@@ -22,7 +22,7 @@ instance/
 
 # Environment variables
 .env
-backend/venv/
+/backend/venv
 # Flask specific
 *.log
 *.pot

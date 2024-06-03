@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from pymongo import MongoClient
-import bcrypt
+import jwt
+import datetime
+from functools import wraps
 from config import Config
 from bson.objectid import ObjectId
 # models
@@ -16,6 +18,26 @@ tv_shows_collection = movie_db['tv_shows']
 premiere_collection = movie_db['premiere']
 top_rated_movies_collection = movie_db['top_rated_movies']
 interactions_collection = interaction_db['interactions']
+
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+        try:
+            token = token.split(" ")[1]
+            data = jwt.decode(token, Config.SECRET_KEY, algorithms=['HS256'])
+            current_user = data['username']
+        except jwt.ExpiredSignatureError:
+            print("Token has expired!")
+            return jsonify({'message': 'Token has expired!'}), 401
+        except jwt.InvalidTokenError:
+            print("Token is invalid!")
+            return jsonify({'message': 'Token is invalid!'}), 401
+        return f(*args, **kwargs)
+    return decorated
 
 # routes
 # 1
@@ -49,9 +71,13 @@ def login():
     user = find_user_by_username_or_email(username_or_email)
     if not user or not check_password(user['password'], password):
         return jsonify({'message': 'Invalid username/email or password'}), 401
-
-    return user['username']
-    # return jsonify({'message': 'Login successful'}), 200
+    
+    token = jwt.encode(
+        {'username': user['username'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+        Config.SECRET_KEY,
+        algorithm='HS256'
+    )
+    return jsonify({'token': token, 'username':user['username']})
 
 # 2
 tmdb_api_blueprint = Blueprint('api', __name__)
@@ -110,9 +136,9 @@ def get_comment(id):
         return jsonify([]), 200
 
 @info_blueprint.route('/comment', methods=['POST'])
+@token_required
 def post_comment():
     data = request.json
-    print("data:", data)
     movie_id = data['movie_id']
     username = data['username']
     text = data['text']
@@ -134,6 +160,7 @@ def post_comment():
     return jsonify({"message": "Comment added"}), 201
 
 @info_blueprint.route('/comment/like', methods=['POST'])
+@token_required
 def like_comment():
     data = request.get_json()
     movie_id = data['movie_id']
@@ -147,6 +174,7 @@ def like_comment():
     return jsonify({"message": "Comment liked"}), 200
 
 @info_blueprint.route('/comment/dislike', methods=['POST'])
+@token_required
 def dislike_comment():
     data = request.get_json()
     movie_id = data['movie_id']

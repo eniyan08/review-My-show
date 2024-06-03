@@ -38,7 +38,8 @@ const Login = () => {
         else {
             try {
                 const response = await axios.post('http://localhost:5000/auth/', form);
-                localStorage.setItem('username', response.data)
+                localStorage.setItem('token', response.data.token)
+                localStorage.setItem('username', response.data.username)
                 setForm({
                     username_or_email: '',
                     password: ''
