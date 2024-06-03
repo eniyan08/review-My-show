@@ -16,37 +16,53 @@ This is a web project created using React for the frontend, Flask for the backen
 
 1. Navigate to frontend directory.
 
+    ```bash
     cd frontend
+    ```
 
 2. Install dependencies.
 
+    ```bash
     npm install
+    ```
 
 3. Start the development server.
 
+    ```bash
     npm start
+    ```
 
 ### Backend
 
 1. Navigate to backend directory.
 
+    ```bash
     cd backend
+    ```
 
 2. Create a virtual environment.
 
+    ```bash
     python -m venv env
+    ```
 
 3. Activate the virtual environment.
 
-    /venv/Scripts/activate
+      ```bash
+      env\Scripts\activate
+      ```
 
 4. Install dependencies.
 
+    ```bash
     pip install -r requirements.txt
+    ```
 
 5. Start the Flask server.
 
+    ```bash
     python app.py
+    ```
 
 ### Database
 
