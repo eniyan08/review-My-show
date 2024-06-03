@@ -8,14 +8,11 @@ Movie data is fetched from The Movie Database (TMDB) API and stored in MongoDB. 
 
 ## Features
 
-# Browse Movies:
-    View detailed information about movies fetched from the TMDB API.
-# User Reviews: 
-    Post your own reviews and read reviews from other users.
-# Real-Time Updates: 
-    Enjoy a seamless experience with real-time updates without page reloads.
-# Responsive Design: 
-    Access the platform from any device with a responsive UI built using React
+### Browse Movies: #### View detailed information about movies fetched from the TMDB API.
+### User Reviews: #### Post your own reviews and read reviews from other users.
+### Real-Time Updates: #### Enjoy a seamless experience with real-time updates without page reloads.
+### Responsive Design: #### Access the platform from any device with a responsive UI built using React
+
 ## Pre-requisites
 
 - Node.js
