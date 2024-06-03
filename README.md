@@ -43,13 +43,13 @@ This is a web project created using React for the frontend, Flask for the backen
 2. Create a virtual environment.
 
     ```bash
-    python -m venv env
+    python -m venv venv
     ```
 
 3. Activate the virtual environment.
 
       ```bash
-      env\Scripts\activate
+      venv\Scripts\activate
       ```
 
 4. Install dependencies.
