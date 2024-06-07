@@ -3,7 +3,7 @@
 FROM node:18-slim as build
 WORKDIR /frontend
 COPY package*.json .
-RUN npm install
+RUN npm install --only=production
 COPY . .
 
 # Stage2: Production Stage
