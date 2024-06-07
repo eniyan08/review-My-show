@@ -222,7 +222,7 @@ const Info = () => {
                         }
                     </div>
                 </div>
-                <div className="mx-6 mb-6 p-6 flex flex-col border border-gray-300 rounded-lg shadow-lg">
+                <div className="mx-6 pb-6 p-6 flex flex-col border border-gray-300 rounded-lg shadow-lg">
                     <h2 className="pl-12 font-bold text-2xl text-gray-700">Comments Section</h2>
                     <div className=" px-12 py-6 w-full">
                         <div className="mb-4">
