@@ -11,8 +11,8 @@ build/
 dist/
 
 # Environment variables
-.env
-/venv
+.venv
+/backend/venv
 
 # Python
 *.pyc
@@ -20,11 +20,7 @@ __pycache__/
 instance/
 .pytest_cache/
 
-# Environment variables
-.env
-/backend/venv
 # Flask specific
 *.log
 *.pot
 *.py[cod]
-*.sqlite3
