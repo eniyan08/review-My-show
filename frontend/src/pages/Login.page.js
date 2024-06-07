@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
+    const API_URL = '/api';
 
     const [form, setForm] = useState({
         username_or_email: '',
@@ -37,7 +38,8 @@ const Login = () => {
         }
         else {
             try {
-                const response = await axios.post('http://localhost:5000/auth/', form);
+                const response = await axios.post(`${API_URL}/auth/`, form);
+                console.log(response.data)
                 localStorage.setItem('token', response.data.token)
                 localStorage.setItem('username', response.data.username)
                 setForm({

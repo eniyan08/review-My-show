@@ -14,6 +14,7 @@ import Comment from "../components/Comments/comments.component";
 
 
 const Info = () => {
+    const API_URL = '/api';
 
     const username = localStorage.getItem('username')
 
@@ -29,7 +30,7 @@ const Info = () => {
 
     useEffect(() => {
         const requestInfo = async () => {
-            const getInfo = await axios.get(`http://localhost:5000/info/${id}`)
+            const getInfo = await axios.get(`${API_URL}/info/${id}`)
             setInfo(getInfo.data)
         }
         requestInfo()
@@ -44,7 +45,7 @@ const Info = () => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/info/comment/${id}`)
+                const response = await axios.get(`${API_URL}/info/comment/${id}`)
                 setComments(response.data)
             } catch (error) {
                 console.error("Error fetching comments:", error)
@@ -57,7 +58,7 @@ const Info = () => {
     // -------------------------------------------------------------------------------------------------------------------------------
     const token = localStorage.getItem('token');
     const handlePostComment = async () => {
-        await axios.post('http://localhost:5000/info/comment', {
+        await axios.post(`${API_URL}/info/comment`, {
             movie_id: id, username: username, text: commentText
         },
             {
@@ -67,10 +68,9 @@ const Info = () => {
             }
         )
             .then(response => {
-                console.log(response)
                 const fetchComments = async () => {
                     try {
-                        const response = await axios.get(`http://localhost:5000/info/comment/${id}`)
+                        const response = await axios.get(`${API_URL}/info/comment/${id}`)
                         setComments(response.data)
                     } catch (error) {
                         console.error("Error fetching comments:", error)
@@ -88,7 +88,7 @@ const Info = () => {
     // -----------------------------------------------------------------------------------------------------------------------
 
     const handleLikeComment = async (commentId) => {
-        await axios.post('http://localhost:5000/info/comment/like', { movie_id: id, comment_id: commentId }, {
+        await axios.post(`${API_URL}/info/comment/like`, { movie_id: id, comment_id: commentId }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -107,7 +107,7 @@ const Info = () => {
     // -------------------------------------------------------------------------------------------------------------------------
 
     const handleDislikeComment = async (commentId) => {
-        await axios.post('http://localhost:5000/info/comment/dislike', { movie_id: id, comment_id: commentId }, {
+        await axios.post(`${API_URL}/info/comment/dislike`, { movie_id: id, comment_id: commentId }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -157,12 +157,12 @@ const Info = () => {
                     <div className="absolute flex w-full h-96 top-10">
                         <div className="absolute container  mx-auto flex w-full h-full">
                             <div className="ml-10 w-fit h-fit text-white ">
-                                <FaLongArrowAltLeft className=" hover:text-red-600"
+                                <FaLongArrowAltLeft className="hover:text-red-600"
                                     onClick={handleBack} />
                             </div>
                             <img src={`https://image.tmdb.org/t/p/original${info.poster_path}`}
                                 alt="poster"
-                                className="h-80 w-60 rounded-lg ml-12"
+                                className="h-80 w-56 rounded-lg ml-12"
                             />
                             <div className="flex flex-col text-white pl-8 ">
                                 <div className="flex gap-2 bg-gray-800 w-fit rounded-full pr-2">
@@ -170,9 +170,9 @@ const Info = () => {
                                     <span className="font-semibold">PREMIERE</span>
                                 </div>
                                 {/* <span className="mt-2">Brand new releases every Friday</span> */}
-                                <span className="text-3xl font-bold pt-4">{info.title}</span>
+                                <span className="text-3xl font-bold pt-4">{info.title}{info.name}</span>
                                 <span className="pt-4">English</span>
-                                <span className="pt-4">Release date: {info.release_date}</span>
+                                <span className="pt-4">Release date: {info.release_date}{info.first_air_date}</span>
                                 <span className="pt-4">Rating: {info.vote_average}/10</span>
                                 <span className="pt-4 w-5/6">{info.overview}</span>
                             </div>
@@ -180,20 +180,21 @@ const Info = () => {
                     </div>
                 </div>
                 <div className="mx-6 my-4 px-6 pt-2 pb-4 border border-gray-300 rounded-lg shadow-md">
-                    <div className="flex py-2 text-start gap-3 pl-12">
+                    <div className="flex py-2 text-start gap-4 pl-12">
 
-                        <h3 className="mt-1 font-bold text-lg text-gray-700">Have you watched this movie?</h3>
+                        {info.name && <h3 className="mt-1 font-bold text-lg text-gray-700">Have you watched this show?</h3>}
+                        {info.title && <h3 className="mt-1 font-bold text-lg text-gray-700">Have you watched this movie?</h3>}
                         <IoMdCheckmark onClick={handleYes}
-                            className="mt-2 w-5 h-5 bg-blue-500 hover:bg-green-500 rounded-sm text-white" />
+                            className="mt-2 w-5 h-5 bg-blue-500 hover:bg-navRed-400 rounded-sm text-white" />
                         <RxCross2 onClick={handleNo}
-                            className="mt-2 w-5 h-5 bg-gray-700 hover:bg-red-500 rounded-sm text-white" />
+                            className="mt-2 w-5 h-5 bg-gray-700 hover:bg-navRed-400 rounded-sm text-white" />
 
 
-                        {yes && <div className="flex gap-3 pl-64">
+                        {yes && <div className="flex gap-3 pl-60">
                             <h3 className="mt-1 font-bold text-lg text-gray-700">Do you like it?</h3>
-                            <VscThumbsupFilled className="mt-2 w-5 h-5 text-blue-500 hover:text-green-500" />
-                            <VscThumbsdownFilled className="mt-2 w-5 h-5 text-gray-700 hover:text-red-500" />
-                            <div className="flex gap-3 pl-64">
+                            <VscThumbsupFilled className="mt-2 w-5 h-5 text-blue-500 hover:text-navRed-400" />
+                            <VscThumbsdownFilled className="mt-2 w-5 h-5 text-gray-700 hover:text-navRed-400" />
+                            <div className="flex gap-3 pl-60">
                                 <h3 className="mt-1 font-bold text-lg text-gray-700">Give us your rating :</h3>
                                 <div className="flex space-x-1 ">
                                     {[...Array(5)].map((star, index) => {
@@ -202,7 +203,7 @@ const Info = () => {
                                             <button
                                                 type="button"
                                                 key={index}
-                                                className={`text-2xl ${index <= (hover || rating) ? "text-yellow-500" : "text-gray-300"}`}
+                                                className={`text-2xl ${index <= (hover || rating) ? "text-navRed-400" : "text-gray-300"}`}
                                                 onClick={() => setRating(index)}
                                                 onMouseEnter={() => {
                                                     setHover(index)
@@ -219,21 +220,30 @@ const Info = () => {
                             </div>
                         </div>
                         }
-
                     </div>
                 </div>
-                <div className="mx-6 p-6 flex flex-col border border-gray-300 rounded-lg shadow-lg">
+                <div className="mx-6 mb-6 p-6 flex flex-col border border-gray-300 rounded-lg shadow-lg">
                     <h2 className="pl-12 font-bold text-2xl text-gray-700">Comments Section</h2>
                     <div className=" px-12 py-6 w-full">
                         <div className="mb-4">
-                            <textarea
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Write a comment about this movie..."
-                                value={commentText}
-                                onChange={(e) => setCommentText(e.target.value)}
-                            />
+                            {info.title &&
+                                <textarea
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                    placeholder="Write a comment about this movie..."
+                                    value={commentText}
+                                    onChange={(e) => setCommentText(e.target.value)}
+                                />
+                            }
+                            {info.name &&
+                                <textarea
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                    placeholder="Write a comment about this show..."
+                                    value={commentText}
+                                    onChange={(e) => setCommentText(e.target.value)}
+                                />
+                            }
                             <button
-                                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+                                className="mt-2 px-4 py-2 bg-navRed-400 text-white rounded hover:bg-blue-500"
                                 onClick={handlePostComment}
                             >
                                 Post Comment

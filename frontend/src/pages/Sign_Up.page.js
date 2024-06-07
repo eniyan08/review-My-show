@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 
 const Sign_Up = () => {
+    const API_URL = '/api';
+
     const [form, setForm] = useState({
         username: '',
         email: '',
@@ -35,6 +37,7 @@ const Sign_Up = () => {
     };
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
 
         // e.preventDefault() is called to prevent the default behavior of the form submission, 
@@ -50,7 +53,7 @@ const Sign_Up = () => {
             setErrors(validationErrors);
         } else {
             try {
-                const response = await axios.post('http://localhost:5000/auth/signup', form);
+                const response = await axios.post(`${API_URL}/auth/signup`, form);
                 setSuccess(response.data.message);
                 setForm({
                     username: '',
@@ -60,8 +63,13 @@ const Sign_Up = () => {
 
                 navigate('/')
             } catch (error) {
-                console.log(error.response)
-                setErrors({ server: error.response.data.message });
+                if (error.response && error.response.data) {
+                    setErrors({ server: error.response.data.message });
+                } else {
+                    // Handle cases where error.response is undefined
+                    console.error('Error:', error);
+                    setErrors({ server: 'An unexpected error occurred. Please try again later.' });
+                }
             }
         }
     };

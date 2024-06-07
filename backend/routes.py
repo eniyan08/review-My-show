@@ -64,7 +64,7 @@ def login():
     data = request.get_json()
     username_or_email = data.get('username_or_email')
     password = data.get('password')
-
+    print(username_or_email, password)
     if not username_or_email or not password:
         return jsonify({'message': 'Missing required fields'}), 400
 
@@ -77,41 +77,39 @@ def login():
         Config.SECRET_KEY,
         algorithm='HS256'
     )
-    return jsonify({'token': token, 'username':user['username']})
+    return jsonify({'token': token, 'username':user['username']}), 200
 
 # 2
-tmdb_api_blueprint = Blueprint('api', __name__)
+tmdb_api_blueprint = Blueprint('tmdb', __name__)
 @tmdb_api_blueprint.route('/movies', methods=['GET'])
 def get_movies():
-    # fetch_and_store()
     movies = list(movies_collection.find({}, {'_id': 0}))
-    print(jsonify(movies))
-    return jsonify(movies)
+    return jsonify(movies), 200
 
 @tmdb_api_blueprint.route('/tv_shows', methods=['GET'])
 def get_tv_shows():
     tv_shows = list(tv_shows_collection.find({'genre_ids':{"$in": [10751,10766,10767,99,18,37]}}, {'_id': 0}))
-    return jsonify(tv_shows)
+    return jsonify(tv_shows), 200
 
 @tmdb_api_blueprint.route('/premiere', methods=['GET'])
 def get_premiere():
     premieres = list(premiere_collection.find({}, {'_id': 0}))
-    return jsonify(premieres)
+    return jsonify(premieres), 200
 
 @tmdb_api_blueprint.route('/top_rated_movies', methods=['GET'])
 def get_top_rated_movies():
     top_movies = list(top_rated_movies_collection.find({}, {'_id': 0}))
-    return jsonify(top_movies)
+    return jsonify(top_movies), 200
 
 @tmdb_api_blueprint.route('/movies/genre/<int:genre_id>', methods=['GET'])
 def get_movie_by_genre(genre_id):
     movie_by_genre = list(movies_collection.find({'genre_ids':genre_id}, {'_id': 0}))
-    return jsonify(movie_by_genre)
+    return jsonify(movie_by_genre), 200
 
 @tmdb_api_blueprint.route('/tv_shows/genre/<int:genre_id>', methods=['GET'])
 def get_tv_show_by_genre(genre_id):
     tv_show_by_genre = list(tv_shows_collection.find({'genre_ids':genre_id}, {'_id': 0}))
-    return jsonify(tv_show_by_genre)
+    return jsonify(tv_show_by_genre), 200
 
 # 3
 info_blueprint = Blueprint('/info', __name__)
@@ -120,9 +118,9 @@ def get_info(id):
         movie_details = movies_collection.find_one({'id':id}, {'_id': 0})
         tv_show_details = tv_shows_collection.find_one({"id":id}, {'_id': 0})
         if movie_details:
-            return jsonify(movie_details)
+            return jsonify(movie_details), 200
         elif tv_show_details:
-            return jsonify(tv_show_details)
+            return jsonify(tv_show_details), 200
 
 @info_blueprint.route('/comment/<int:id>', methods=['GET'])
 def get_comment(id):

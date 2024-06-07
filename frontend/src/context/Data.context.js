@@ -5,7 +5,7 @@ import axios from 'axios';
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-
+    const API_URL = '/api';
 
     // Home data
     const [popularMovies, setPopularMovies] = useState(() => {
@@ -83,10 +83,10 @@ export const DataProvider = ({ children }) => {
         if (type === 'HomeData' && !popularMovies && !premiereShows && !popularTvshows && !anime) {
             setLoading((prev) => ({ ...prev, homeData: true }));
 
-            const movieResponse = await axios.get('http://localhost:5000/api/movies');
-            const premiereResponse = await axios.get('http://localhost:5000/api/premiere');
-            const tvResponse = await axios.get('http://localhost:5000/api/tv_shows');
-            const animeResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/16');
+            const movieResponse = await axios.get(`${API_URL}/tmdb/movies`);
+            const premiereResponse = await axios.get(`${API_URL}/tmdb/premiere`);
+            const tvResponse = await axios.get(`${API_URL}/tmdb/tv_shows`);
+            const animeResponse = await axios.get(`${API_URL}/tmdb/tv_shows/genre/16`);
 
             localStorage.setItem('popularMovies', JSON.stringify(movieResponse.data));
             localStorage.setItem('premiereShows', JSON.stringify(premiereResponse.data));
@@ -106,11 +106,11 @@ export const DataProvider = ({ children }) => {
         else if (type === 'MovieData' && !actionMovies && !comedyMovies && !crimeMovies && !horrorMovies && !sfMovies) {
             setLoading((prev) => ({ ...prev, movieData: true }));
 
-            const actionResponse = await axios.get('http://localhost:5000/api/movies/genre/28');
-            const comedyResponse = await axios.get('http://localhost:5000/api/movies/genre/35');
-            const crimeResponse = await axios.get('http://localhost:5000/api/movies/genre/80');
-            const horrorResponse = await axios.get('http://localhost:5000/api/movies/genre/27');
-            const sfResponse = await axios.get('http://localhost:5000/api/movies/genre/878');
+            const actionResponse = await axios.get(`${API_URL}/tmdb/movies/genre/28`);
+            const comedyResponse = await axios.get(`${API_URL}/tmdb/movies/genre/35`);
+            const crimeResponse = await axios.get(`${API_URL}/tmdb/movies/genre/80`);
+            const horrorResponse = await axios.get(`${API_URL}/tmdb/movies/genre/27`);
+            const sfResponse = await axios.get(`${API_URL}/tmdb/movies/genre/878`);
 
             localStorage.setItem('actionMovies', JSON.stringify(actionResponse.data));
             localStorage.setItem('comedyMovies', JSON.stringify(comedyResponse.data));
@@ -132,11 +132,11 @@ export const DataProvider = ({ children }) => {
         else if (type === 'TV' && !actionShows && !comedyShows && !crimeShows && !horrorShows && !sfShows) {
             setLoading((prev) => ({ ...prev, tvData: true }));
 
-            const actionShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/10759');
-            const comedyShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/35');
-            const crimeShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/80');
-            const horrorShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/10768');
-            const sfShowsResponse = await axios.get('http://localhost:5000/api/tv_shows/genre/10765');
+            const actionShowsResponse = await axios.get(`${API_URL}/tmdb/tv_shows/genre/10759`);
+            const comedyShowsResponse = await axios.get(`${API_URL}/tmdb/tv_shows/genre/35`);
+            const crimeShowsResponse = await axios.get(`${API_URL}/tmdb/tv_shows/genre/80`);
+            const horrorShowsResponse = await axios.get(`${API_URL}/tmdb/tv_shows/genre/10768`);
+            const sfShowsResponse = await axios.get(`${API_URL}/tmdb/tv_shows/genre/10765`);
 
             localStorage.setItem('actionShows', JSON.stringify(actionShowsResponse.data));
             localStorage.setItem('comedyShows', JSON.stringify(comedyShowsResponse.data));
@@ -157,21 +157,6 @@ export const DataProvider = ({ children }) => {
 
     const clearData = useCallback(() => {
         localStorage.clear()
-        // localStorage.removeItem('username')
-        // localStorage.removeItem('popularMovies');
-        // localStorage.removeItem('premiereShows');
-        // localStorage.removeItem('popularTvshows');
-        // localStorage.removeItem('anime');
-        // localStorage.removeItem('actionMovies');
-        // localStorage.removeItem('comedyMovies');
-        // localStorage.removeItem('crimeMovies');
-        // localStorage.removeItem('horrorMovies');
-        // localStorage.removeItem('sfMovies');
-        // localStorage.removeItem('actionShows');
-        // localStorage.removeItem('comedyShows');
-        // localStorage.removeItem('crimeShows');
-        // localStorage.removeItem('horrorShows');
-        // localStorage.removeItem('sfShows');
         setPopularMovies(null);
         setPremiereShows(null);
         setPopularTvshows(null);

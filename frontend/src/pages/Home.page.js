@@ -10,6 +10,7 @@ const HomePage = () => {
 
     useEffect(() => {
         if (!popularMovies || !premiereShows || !popularTvshows || !anime) {
+            console.log("whats happening??")
             fetchData('HomeData');
         }
     }, [popularMovies, premiereShows, popularTvshows, anime, fetchData]);
@@ -30,7 +31,8 @@ const HomePage = () => {
                     images={popularMovies}
                     title="Recommended Movies"
                     subtitle="Popular"
-                    isDark={false} />
+                    isDark={false}
+                    isMovie={true} />
             </div>
             {/* --------------------------------------------------------------------------------------------- */}
 
@@ -47,7 +49,8 @@ const HomePage = () => {
                         images={premiereShows}
                         title="Premieres"
                         subtitle="Brand new release very Friday"
-                        isDark={true} />
+                        isDark={true}
+                        isMovie={true} />
                 </div>
             </div>
 
@@ -58,7 +61,8 @@ const HomePage = () => {
                     images={popularTvshows}
                     title="Online TV Shows"
                     subtitle="Exclusives"
-                    isDark={false} />
+                    isDark={false}
+                    isMovie={false} />
             </div>
 
             {/* -------------------------------------------------------------------------------------------------------- */}
@@ -68,7 +72,8 @@ const HomePage = () => {
                     images={anime}
                     title="Anime"
                     subtitle="Peak Fiction"
-                    isDark={false} />
+                    isDark={false}
+                    isMovie={false} />
             </div>
         </>
     )
