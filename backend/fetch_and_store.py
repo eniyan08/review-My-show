@@ -40,6 +40,6 @@ def fetch_and_store():
     top_rated_movies = fetch_data('movie/top_rated', {'api_key': TMDB_API_KEY, 'page': 1})
     top_rated_movies_collection.insert_many(top_rated_movies)
 
-    
+    print("Successfully fetched Movie database")
 
 fetch_and_store()

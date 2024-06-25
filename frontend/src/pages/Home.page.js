@@ -10,7 +10,6 @@ const HomePage = () => {
 
     useEffect(() => {
         if (!popularMovies || !premiereShows || !popularTvshows || !anime) {
-            console.log("whats happening??")
             fetchData('HomeData');
         }
     }, [popularMovies, premiereShows, popularTvshows, anime, fetchData]);

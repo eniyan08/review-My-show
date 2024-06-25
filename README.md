@@ -79,3 +79,8 @@ Make sure MongoDB is running on your machine. By default it runs on `mongodb://l
 
 Access the frontend at `http://localhost:3000` and the backend API at `http://localhost:5000`.
 
+## Using Docker-Compose
+
+```bash
+docker-compose up --build
+```
