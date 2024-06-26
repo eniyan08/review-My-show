@@ -35,13 +35,13 @@ class SignUp(Resource):
         password = data.get('password')
 
         if not username or not email or not password:
-            return ({'message': 'Missing required fields'}), 400
+            return {'message': 'Missing required fields'}, 400
 
         if find_user_by_username_or_email(username) or find_user_by_username_or_email(email):
-            return ({'message': 'Username or email already exists'}), 409
+            return {'message': 'Username or email already exists'}, 409
 
         insert_user(username, email, password)
-        return ({'message': 'User registered successfully'}), 201
+        return {'message': 'User registered successfully'}, 201
 
 class Login(Resource):
     """
@@ -69,11 +69,11 @@ class Login(Resource):
             username_or_email = data.get('username_or_email')
             password = data.get('password')
             if not username_or_email or not password:
-                return ({'message': 'Missing required fields'}), 400
+                return {'message': 'Missing required fields'}, 400
 
             user = find_user_by_username_or_email(username_or_email)
             if not user or not check_password(user['password'], password):
-                return ({'message': 'Invalid username/email or password'}), 401
+                return {'message': 'Invalid username/email or password'}, 401
     
             token = jwt.encode(
                 {'username': user['username'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
@@ -83,4 +83,4 @@ class Login(Resource):
             return {'token': token, 'username':user['username']}, 200
         except Exception as e:
             print(f"Error: {e}")
-            return ({'message': 'Internal server error'}), 500
+            return {'message': 'Internal server error'}, 500

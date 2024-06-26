@@ -24,7 +24,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Sign_Up />} />
           <Route path="/home" element={<DefaultLayout><HomePage /></DefaultLayout>} />
-          <Route path="/info/:id" element={<DefaultLayout><Info /></DefaultLayout>} />
+          <Route path="/info/:type/:id" element={<DefaultLayout><Info /></DefaultLayout>} />
           <Route path="/movies" element={<DefaultLayout><Movies /></DefaultLayout>} />
           <Route path="/tv_shows" element={<DefaultLayout><Tv_shows /></DefaultLayout>} />
 

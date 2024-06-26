@@ -6,7 +6,7 @@ const Poster = (props) => {
         <>
             <div className="flex flex-col items-start px-3 pt-3">
                 <Link to={{
-                    pathname: `/info/${props.id}`,
+                    pathname: `/info/${props.type}/${props.id}`,
                 }}
                     className="lg:h-80 md:h-60 sm:h-50 rounded-xl">
                     <img

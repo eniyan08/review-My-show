@@ -20,7 +20,7 @@ const PosterSlider = (props) => {
                         <Poster {...data}
                             key={index}
                             isDark={props.isDark}
-                            isMovie={props.isMovie}
+                            type={props.type}
                         />
                     )
                 }

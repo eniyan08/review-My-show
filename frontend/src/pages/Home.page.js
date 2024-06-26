@@ -28,10 +28,10 @@ const HomePage = () => {
             <div className='container mx-auto pt-36 pb-8 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2'>
                 <PosterSlider
                     images={popularMovies}
+                    type="movie"
                     title="Recommended Movies"
                     subtitle="Popular"
-                    isDark={false}
-                    isMovie={true} />
+                    isDark={false} />
             </div>
             {/* --------------------------------------------------------------------------------------------- */}
 
@@ -46,10 +46,10 @@ const HomePage = () => {
                     </div>
                     <PosterSlider
                         images={premiereShows}
+                        type="movie"
                         title="Premieres"
                         subtitle="Brand new release very Friday"
-                        isDark={true}
-                        isMovie={true} />
+                        isDark={true} />
                 </div>
             </div>
 
@@ -58,10 +58,10 @@ const HomePage = () => {
             <div className='container mx-auto pt-8 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2'>
                 <PosterSlider
                     images={popularTvshows}
+                    type="tvshow"
                     title="Online TV Shows"
                     subtitle="Exclusives"
-                    isDark={false}
-                    isMovie={false} />
+                    isDark={false} />
             </div>
 
             {/* -------------------------------------------------------------------------------------------------------- */}
@@ -69,10 +69,10 @@ const HomePage = () => {
             <div className='container mx-auto pt-8 pb-8 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2'>
                 <PosterSlider
                     images={anime}
+                    type="tvshow"
                     title="Anime"
                     subtitle="Peak Fiction"
-                    isDark={false}
-                    isMovie={false} />
+                    isDark={false} />
             </div>
         </>
     )

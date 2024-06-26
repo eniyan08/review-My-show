@@ -25,12 +25,12 @@ const Info = () => {
         navigate('/home')
     }
 
-    const { id } = useParams();
+    const { type, id } = useParams();
     const [info, setInfo] = useState([])
 
     useEffect(() => {
         const requestInfo = async () => {
-            const getInfo = await axios.get(`${API_URL}/info/${id}`)
+            const getInfo = await axios.get(`${API_URL}/info/${type}/${id}`)
             setInfo(getInfo.data)
         }
         requestInfo()
@@ -45,7 +45,7 @@ const Info = () => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await axios.get(`${API_URL}/info/comment/${id}`)
+                const response = await axios.get(`${API_URL}/info/${type}/comment/${id}`)
                 setComments(response.data)
             } catch (error) {
                 console.error("Error fetching comments:", error)
@@ -58,8 +58,8 @@ const Info = () => {
     // -------------------------------------------------------------------------------------------------------------------------------
     const token = localStorage.getItem('token');
     const handlePostComment = async () => {
-        await axios.post(`${API_URL}/info/comment`, {
-            movie_id: id, username: username, text: commentText
+        await axios.post(`${API_URL}/info/${type}/comment`, {
+            id: id, username: username, text: commentText
         },
             {
                 headers: {
@@ -70,7 +70,7 @@ const Info = () => {
             .then(response => {
                 const fetchComments = async () => {
                     try {
-                        const response = await axios.get(`${API_URL}/info/comment/${id}`)
+                        const response = await axios.get(`${API_URL}/info/${type}/comment/${id}`)
                         setComments(response.data)
                     } catch (error) {
                         console.error("Error fetching comments:", error)
@@ -88,7 +88,7 @@ const Info = () => {
     // -----------------------------------------------------------------------------------------------------------------------
 
     const handleLikeComment = async (commentId) => {
-        await axios.post(`${API_URL}/info/comment/like`, { movie_id: id, comment_id: commentId }, {
+        await axios.post(`${API_URL}/info/${type}/comment/like`, { id: id, comment_id: commentId }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -107,7 +107,7 @@ const Info = () => {
     // -------------------------------------------------------------------------------------------------------------------------
 
     const handleDislikeComment = async (commentId) => {
-        await axios.post(`${API_URL}/info/comment/dislike`, { movie_id: id, comment_id: commentId }, {
+        await axios.post(`${API_URL}/info/${type}/comment/dislike`, { id: id, comment_id: commentId }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

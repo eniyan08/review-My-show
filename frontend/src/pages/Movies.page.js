@@ -27,6 +27,7 @@ const Movies = () => {
             <div className='container pt-32 mx-auto 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2  '>
                 <PosterSlider
                     images={actionMovies}
+                    type="movie"
                     title="Action"
                     subtitle=""
                     isDark={false} />
@@ -35,6 +36,7 @@ const Movies = () => {
             <div className='container pt-4 mx-auto 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2  '>
                 <PosterSlider
                     images={comedyMovies}
+                    type="movie"
                     title="Comedy"
                     subtitle=""
                     isDark={false} />
@@ -43,6 +45,7 @@ const Movies = () => {
             <div className='container pt-4 mx-auto 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2  '>
                 <PosterSlider
                     images={crimeMovies}
+                    type="movie"
                     title="Crime"
                     subtitle=""
                     isDark={false} />
@@ -51,6 +54,7 @@ const Movies = () => {
             <div className='container pt-4 mx-auto 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2  '>
                 <PosterSlider
                     images={horrorMovies}
+                    type="movie"
                     title="Horror"
                     subtitle=""
                     isDark={false} />
@@ -59,6 +63,7 @@ const Movies = () => {
             <div className='container pt-4 pb-4 mx-auto 2xl:px-32 xl:px-10 lg:px-10 md:px-10 sm:px-2  '>
                 <PosterSlider
                     images={sfMovies}
+                    type="movie"
                     title="Science Fiction"
                     subtitle=""
                     isDark={false} />

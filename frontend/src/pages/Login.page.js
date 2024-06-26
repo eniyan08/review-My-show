@@ -39,14 +39,12 @@ const Login = () => {
         else {
             try {
                 const response = await axios.post(`${API_URL}/auth/login`, form);
-                console.log("response from login:", response)
                 localStorage.setItem('token', response.data.token)
                 localStorage.setItem('username', response.data.username)
                 setForm({
                     username_or_email: '',
                     password: ''
                 })
-                console.log("lets see")
                 navigate('/home')
             } catch (error) {
                 setErrors({ server: 'Invalid username/email or password' })
