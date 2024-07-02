@@ -15,7 +15,7 @@ import Comment from "../components/Comments/comments.component";
 
 const Info = () => {
     // const API_URL = '/api';
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = 'http://localhost:5000';
 
     const username = localStorage.getItem('username')
 
@@ -57,6 +57,11 @@ const Info = () => {
     }, [id]);
 
     // -------------------------------------------------------------------------------------------------------------------------------
+    const [alert, setAlert] = useState(false)
+
+    const handleAlert = () => {
+        navigate('/')
+    }
     const token = localStorage.getItem('token');
     const handlePostComment = async () => {
         await axios.post(`${API_URL}/info/${type}/comment`, {
@@ -74,6 +79,8 @@ const Info = () => {
                         const response = await axios.get(`${API_URL}/info/${type}/comment/${id}`)
                         setComments(response.data)
                     } catch (error) {
+
+
                         console.error("Error fetching comments:", error)
                     }
                 };
@@ -83,7 +90,10 @@ const Info = () => {
                 setCommentText("");
 
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                setAlert(true)
+                console.error(error)
+            });
     };
 
     // -----------------------------------------------------------------------------------------------------------------------
@@ -102,7 +112,10 @@ const Info = () => {
                     return comment;
                 }));
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                setAlert(true)
+                console.error(error)
+            });
     };
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -121,7 +134,10 @@ const Info = () => {
                     return comment;
                 }));
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                setAlert(true)
+                console.error(error)
+            });
     };
 
     // ----------------------------------------------------------------------------------
@@ -144,6 +160,19 @@ const Info = () => {
     return (
         <>
             <div className="mt-24">
+                {alert &&
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white p-6 rounded shadow-lg">
+                            <p className="mb-4">Your session has expired. Please login again</p>
+                            <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold ml-32 py-2 px-4 rounded"
+                                onClick={handleAlert}
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>}
+
                 <div className="relative w-full h-full">
                     <div className="absolute w-full h-full"
                         style={{ backgroundImage: "linear-gradient(90deg, rgb(26, 26, 26) 24.97%, rgb(26, 26, 26) 38.3%, rgba(26, 26, 26, 0.04) 97.47%, rgb(26, 26, 26) 100%)" }}
