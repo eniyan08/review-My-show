@@ -22,7 +22,8 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_URI=mongodb://mongodb:27017/rms_database
+      - TMDB_API_KEY=c977679de6afcab8e7a9312fea820565
     depends_on:
       - mongodb
     volumes:

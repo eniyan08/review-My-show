@@ -14,7 +14,8 @@ import Comment from "../components/Comments/comments.component";
 
 
 const Info = () => {
-    const API_URL = '/api';
+    // const API_URL = '/api';
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const username = localStorage.getItem('username')
 
@@ -250,7 +251,7 @@ const Info = () => {
                             </button>
                         </div>
                         <div>
-                            {comments.map((comment, index) => (
+                            {comments && comments.map((comment, index) => (
                                 <Comment
                                     key={index}
                                     comment={comment}

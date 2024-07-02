@@ -76,7 +76,7 @@ class Login(Resource):
                 return {'message': 'Invalid username/email or password'}, 401
     
             token = jwt.encode(
-                {'username': user['username'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)},
+                {'username': user['username'], 'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=1)},
                 Config.SECRET_KEY,
                 algorithm='HS256'
             )
