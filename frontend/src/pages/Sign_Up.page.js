@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 
 const Sign_Up = () => {
-    // const API_URL = '/api';
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = '/api';
 
     const [form, setForm] = useState({
         username: '',
@@ -68,7 +67,6 @@ const Sign_Up = () => {
                     setErrors({ server: error.response.data.message });
                 } else {
                     // Handle cases where error.response is undefined
-                    console.error('Error:', error);
                     setErrors({ server: 'An unexpected error occurred. Please try again later.' });
                 }
             }

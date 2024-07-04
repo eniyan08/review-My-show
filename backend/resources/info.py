@@ -133,10 +133,9 @@ class Post_Comment(Resource):
                     {"$push": {"comments": comment}},
                     upsert=True
                 )
-
-            if result.modified_count == 0:
-                return {"message": "Movie/Tvshow not found and no change made"}, 404
-
+            print("Result", result)
+            print(result.modified_count)
+           
             return {"message": "Comment added"}, 201
 
         except Exception as e:
@@ -185,9 +184,6 @@ class Like(Resource):
                     {"$inc": {"comments.$.likes": 1}}
                 )
 
-            if result.modified_count == 0:
-                return {"message": "Comment not found or no change made"}, 404
-
             return {"message": "Comment liked"}, 201
 
         except Exception as e:
@@ -203,7 +199,7 @@ class Dislike(Resource):
     post: Handles POST request to add a dislike to a comment
     """
     @token_required
-    def post(self):
+    def post(self, type):
         """
         Handles HTTP POST requests to add a dislike to a comment
 
@@ -237,8 +233,8 @@ class Dislike(Resource):
                     {"$inc": {"comments.$.dislikes": 1}}
                 )
 
-            if result.modified_count == 0:
-                return {"message": "Comment not found or no change made"}, 404
+            # if result.modified_count == 0:
+            #     return {"message": "Comment not found or no change made"}, 404
 
             return {"message": "Comment disliked"}, 201
         

@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
-    // const API_URL = '/api';
-    const API_URL = process.env.REACT_APP_API_URL;
-    console.log("Api url:", API_URL)
+    const API_URL = '/api';
+
     const [form, setForm] = useState({
         username_or_email: '',
         password: ''
@@ -27,7 +26,6 @@ const Login = () => {
     const validate = () => {
         const errors = {}
         if (!form.username_or_email) {
-            console.log("Api url:", API_URL)
             errors.username_or_email = 'Username or Email is required'
         }
         if (!form.password) errors.password = 'Password is required'
@@ -36,26 +34,29 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Api url:", API_URL)
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
-            console.log("Api url:", API_URL)
             setErrors(validationErrors)
         }
         else {
             try {
-                console.log("Api url:", API_URL)
                 const response = await axios.post(`${API_URL}/auth/login`, form);
-                localStorage.setItem('token', response.data.token)
-                localStorage.setItem('username', response.data.username)
+                const token = response.data.token
+                const username = response.data.username
+                const setToken = (token, username, expiresIn) => {
+                    const expiryTime = new Date().getTime() + expiresIn * 1000;
+                    localStorage.setItem('token', token)
+                    localStorage.setItem('username', username)
+                    localStorage.setItem('expiryTime', expiryTime)
+                }
+                setToken(token, username, 3600) // token expires in 1 hour
                 setForm({
                     username_or_email: '',
                     password: ''
                 })
                 navigate('/home')
             } catch (error) {
-                console.log("Api url:", API_URL)
-                    ({ server: 'Invalid username/email or password' })
+                setErrors({ server: 'Invalid username/email or password' })
             }
         }
     }

@@ -14,8 +14,7 @@ import Comment from "../components/Comments/comments.component";
 
 
 const Info = () => {
-    // const API_URL = '/api';
-    const API_URL = 'http://localhost:5000';
+    const API_URL = '/api';
 
     const username = localStorage.getItem('username')
 
@@ -60,9 +59,11 @@ const Info = () => {
     const [alert, setAlert] = useState(false)
 
     const handleAlert = () => {
+        localStorage.clear()
         navigate('/')
     }
     const token = localStorage.getItem('token');
+
     const handlePostComment = async () => {
         await axios.post(`${API_URL}/info/${type}/comment`, {
             id: id, username: username, text: commentText
@@ -79,8 +80,6 @@ const Info = () => {
                         const response = await axios.get(`${API_URL}/info/${type}/comment/${id}`)
                         setComments(response.data)
                     } catch (error) {
-
-
                         console.error("Error fetching comments:", error)
                     }
                 };

@@ -4,7 +4,7 @@ module.exports = function (app) {
     app.use(
         '/api',
         createProxyMiddleware({
-            target: 'http://backend:5000',
+            target: process.env.REACT_APP_API_URL, // Use the Docker service name
             changeOrigin: true,
             pathRewrite: {
                 '^/api': '', // remove /api prefix when forwarding to backend

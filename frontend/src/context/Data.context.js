@@ -5,9 +5,9 @@ import axios from 'axios';
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-    // const API_URL = '/api';
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = '/api';
 
+    // Home Data
     const [popularMovies, setPopularMovies] = useState(null)
     const [premiereShows, setPremiereShows] = useState(null)
     const [popularTvshows, setPopularTvshows] = useState(null)
