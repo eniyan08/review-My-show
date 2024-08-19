@@ -134,8 +134,6 @@ class Post_Comment(Resource):
                     upsert=True
                 )
 
-            if result.modified_count == 0:
-                return {"message": "Movie/Tvshow not found and no change made"}, 404
 
             return {"message": "Comment added"}, 201
 
@@ -171,9 +169,6 @@ class Like(Resource):
             id = data['id']
             comment_id = data['comment_id']
 
-            if not id or not comment_id:
-                return {"message": "movie_id/tvshow_id and comment_id are required"}, 400
-            
             if type=="movie":
                 result = interactions_collection.update_one(
                     {"movie_id": id, "comments.comment_id": ObjectId(comment_id)},
@@ -203,7 +198,7 @@ class Dislike(Resource):
     post: Handles POST request to add a dislike to a comment
     """
     @token_required
-    def post(self):
+    def post(self, type):
         """
         Handles HTTP POST requests to add a dislike to a comment
 
@@ -237,8 +232,7 @@ class Dislike(Resource):
                     {"$inc": {"comments.$.dislikes": 1}}
                 )
 
-            if result.modified_count == 0:
-                return {"message": "Comment not found or no change made"}, 404
+
 
             return {"message": "Comment disliked"}, 201
         

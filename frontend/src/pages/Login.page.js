@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
-    const API_URL = '/api';
+    // const API_URL = '/api';
+    const API_URL = 'http://localhost:5000';
 
     const [form, setForm] = useState({
         username_or_email: '',
@@ -39,8 +40,15 @@ const Login = () => {
         else {
             try {
                 const response = await axios.post(`${API_URL}/auth/login`, form);
-                localStorage.setItem('token', response.data.token)
-                localStorage.setItem('username', response.data.username)
+                const token = response.data.token
+                const username = response.data.username
+                const setToken = (token, username, expiresIn) => {
+                    const expiryTime = new Date().getTime() + expiresIn * 1000;
+                    localStorage.setItem('token', token)
+                    localStorage.setItem('username', username)
+                    localStorage.setItem('expiryTime', expiryTime)
+                }
+                setToken(token, username, 3600) // token expires in 1 minute
                 setForm({
                     username_or_email: '',
                     password: ''

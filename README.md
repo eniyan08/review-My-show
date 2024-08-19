@@ -84,3 +84,13 @@ Access the frontend at `http://localhost:3000` and the backend API at `http://lo
 ```bash
 docker-compose up --build
 ```
+
+
+## Using Redis for cache
+```bash
+docker run -p 6379:6379 redis/redis-stack-server:latest
+```
+
+```bash
+npx redis-cli
+```

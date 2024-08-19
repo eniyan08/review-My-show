@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 
 const Sign_Up = () => {
-    const API_URL = '/api';
+    // const API_URL = "/api"
+    const API_URL = 'http://localhost:5000';
 
     const [form, setForm] = useState({
         username: '',

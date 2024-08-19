@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 import secrets
-
+import redis
 # Load environment variables from a .env file
 load_dotenv()
 
@@ -19,7 +19,7 @@ class Config:
         TMDB_BASE_URL (str): Base URL for the TMDB API.
     """
 
-    MONGO_URI = 'mongodb://mongodb:27017'
+    MONGO_URI = 'mongodb://localhost:27017/rms_database'
 
     # Database names
     USER_DB_NAME = 'user_db'
@@ -29,5 +29,8 @@ class Config:
     #Generate a secret key for the application
     SECRET_KEY = secrets.token_hex(16)
     
-    TMDB_API_KEY = os.environ.get('TMDB_API_KEY', 'default_tmdb_api_key')
+    TMDB_API_KEY = os.environ.get('TMDB_API_KEY', 'c977679de6afcab8e7a9312fea820565')
     TMDB_BASE_URL = 'https://api.themoviedb.org/3' 
+
+    # Redis client setup
+    redis_client = redis.StrictRedis(host='localhost', port=6380, db=0, decode_responses=True)

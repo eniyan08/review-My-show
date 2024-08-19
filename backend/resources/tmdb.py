@@ -7,6 +7,9 @@ from config import Config
 client = MongoClient(Config.MONGO_URI)
 movie_db = client[Config.MOVIE_DB_NAME]
 
+# Initialize Redis client 
+redis_client = Config.redis_client
+
 # Collections
 movies_collection = movie_db['movies']
 tv_shows_collection = movie_db['tv_shows']
@@ -27,12 +30,21 @@ class Movies(Resource):
         Returns:
             tuple: A list of all movies and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
-        try:
-            movies = list(movies_collection.find({}, {'_id': 0}))
-            return movies, 200
-        except Exception as e:
-            print(f"Error fetching movies: {e}")
-            return {"message": "An error occurred while fetching movies."}, 500
+        redis_key = 'movies'
+        cached_data = redis_client.get(redis_key)
+        print("Its working")
+        if cached_data:
+            print('Data found in Redis')
+            return eval(cached_data)
+        else:
+            try:
+                movies = list(movies_collection.find({}, {'_id': 0}))
+                redis_client.setex(redis_key, 3600, str(movies))
+                print("Movies fetched from the database")
+                return movies, 200
+            except Exception as e:
+                print(f"Error fetching movies: {e}")
+                return {"message": "An error occurred while fetching movies."}, 500
 
 class TV_Shows(Resource):
     """
@@ -49,13 +61,21 @@ class TV_Shows(Resource):
         Returns:
             tuple: A list of TV shows and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
-        try:
-            genre_ids = [10751, 10766, 10767, 99, 18, 37]  # List of genre IDs to filter by
-            tv_shows = list(tv_shows_collection.find({'genre_ids': {"$in": genre_ids}}, {'_id': 0}))
-            return tv_shows, 200
-        except Exception as e:
-            print(f"Error fetching TV shows: {e}")
-            return {"message": "An error occurred while fetching TV shows."}, 500
+        redis_key = 'tv_shows'
+        cached_data = redis_client.get(redis_key)
+        if cached_data:
+            print("TV Shows found in Redis")
+            return eval(cached_data)
+        else:
+            try: 
+                genre_ids = [10751, 10766, 10767, 99, 18, 37]  # List of genre IDs to filter by
+                tv_shows = list(tv_shows_collection.find({'genre_ids': {"$in": genre_ids}}, {'_id': 0}))
+                redis_client.setex(redis_key, 3600, str(tv_shows))
+                print("TV Shows fetched from the database")
+                return tv_shows, 200
+            except Exception as e:
+                print(f"Error fetching TV shows: {e}")
+                return {"message": "An error occurred while fetching TV shows."}, 500
         
     
 class Premiere(Resource):
@@ -72,12 +92,20 @@ class Premiere(Resource):
         Returns:
             tuple: A list of premiere movies and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
-        try:
-            premieres = list(premiere_collection.find({}, {'_id': 0}))
-            return premieres, 200
-        except Exception as e:
-            print(f"Error fetching premieres: {e}")
-            return {"message": "An error occurred while fetching premiere movies."}, 500
+        redis_key = 'premiere'
+        cached_data = redis_client.get(redis_key)
+        if cached_data:
+            print("Premiere data found in Redis")
+            return eval(cached_data)
+        else:
+            try:
+                premieres = list(premiere_collection.find({}, {'_id': 0}))
+                redis_client.setex(redis_key, 3600, str(premieres))
+                print("Premieres fetched from the database")
+                return premieres, 200
+            except Exception as e:
+                print(f"Error fetching premieres: {e}")
+                return {"message": "An error occurred while fetching premiere movies."}, 500
 
     
 class Top_Rated_Movies(Resource):
@@ -94,12 +122,20 @@ class Top_Rated_Movies(Resource):
         Returns:
             tuple: A list of top-rated movies and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
-        try:
-            top_movies = list(top_rated_movies_collection.find({}, {'_id': 0}))
-            return top_movies, 200
-        except Exception as e:
-            print(f"Error fetching top-rated movies: {e}")
-            return {"message": "An error occurred while fetching top-rated movies."}, 500
+        redis_key = 'top_movies'
+        cached_data = redis_client.get(redis_key)
+        if cached_data:
+            print("Top Movies data found in Redis")
+            return eval(cached_data)
+        else:
+            try:
+                top_movies = list(top_rated_movies_collection.find({}, {'_id': 0}))
+                redis_client.setex(redis_key, 3600, str(top_movies))
+                print("Top rated movies fetched from the database")
+                return top_movies, 200
+            except Exception as e:
+                print(f"Error fetching top-rated movies: {e}")
+                return {"message": "An error occurred while fetching top-rated movies."}, 500
     
     
 class Movie_By_Genre(Resource):
@@ -120,12 +156,20 @@ class Movie_By_Genre(Resource):
         Returns:
             tuple: A list of movies for the specified genre and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
-        try:
-            movie_by_genre = list(movies_collection.find({'genre_ids': genre_id}, {'_id': 0}))
-            return movie_by_genre, 200
-        except Exception as e:
-            print(f"Error fetching movies by genre: {e}")
-            return {"message": "An error occurred while fetching movies by genre."}, 500
+        redis_key = str("movie_"+str(genre_id))
+        cached_data = redis_client.get(redis_key)
+        if cached_data:
+            print(genre_id, "found in Redis")
+            return eval(cached_data)
+        else:
+            try:
+                movie_by_genre = list(movies_collection.find({'genre_ids': genre_id}, {'_id': 0}))
+                redis_client.setex(redis_key, 3600, str(movie_by_genre))
+                print(genre_id ,"fetched from the database")
+                return movie_by_genre, 200
+            except Exception as e:
+                print(f"Error fetching movies by genre: {e}")
+                return {"message": "An error occurred while fetching movies by genre."}, 500
 
     
 class TV_Show_By_Genre(Resource):
@@ -146,10 +190,18 @@ class TV_Show_By_Genre(Resource):
         Returns:
             tuple: A list of TV shows for the specified genre and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
-        try:
-            tv_show_by_genre = list(tv_shows_collection.find({'genre_ids': genre_id}, {'_id': 0}))
-            return tv_show_by_genre, 200
-        except Exception as e:
-            print(f"Error fetching TV shows by genre: {e}")
-            return {"message": "An error occurred while fetching TV shows by genre."}, 500
+        redis_key = str("tv_"+str(genre_id))
+        cached_data = redis_client.get(redis_key)
+        if cached_data:
+            print(genre_id, "found in Redis")
+            return eval(cached_data)
+        else:
+            try:
+                tv_show_by_genre = list(tv_shows_collection.find({'genre_ids': genre_id}, {'_id': 0}))
+                redis_client.setex(redis_key, 3600, str(tv_show_by_genre))
+                print(genre_id ,"fetched from the database")
+                return tv_show_by_genre, 200
+            except Exception as e:
+                print(f"Error fetching TV shows by genre: {e}")
+                return {"message": "An error occurred while fetching TV shows by genre."}, 500
         
