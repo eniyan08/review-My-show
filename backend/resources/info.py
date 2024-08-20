@@ -134,6 +134,8 @@ class Post_Comment(Resource):
                     upsert=True
                 )
 
+            if result.modified_count == 0:
+                return {"message": "Movie/Tvshow not found and no change made"}, 404
 
             return {"message": "Comment added"}, 201
 
@@ -179,9 +181,6 @@ class Like(Resource):
                     {"tvshow_id": id, "comments.comment_id": ObjectId(comment_id)},
                     {"$inc": {"comments.$.likes": 1}}
                 )
-
-            if result.modified_count == 0:
-                return {"message": "Comment not found or no change made"}, 404
 
             return {"message": "Comment liked"}, 201
 

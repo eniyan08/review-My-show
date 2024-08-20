@@ -68,7 +68,6 @@ const Sign_Up = () => {
                     setErrors({ server: error.response.data.message });
                 } else {
                     // Handle cases where error.response is undefined
-                    console.error('Error:', error);
                     setErrors({ server: 'An unexpected error occurred. Please try again later.' });
                 }
             }

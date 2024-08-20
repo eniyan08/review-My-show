@@ -60,9 +60,11 @@ const Info = () => {
     const [alert, setAlert] = useState(false)
 
     const handleAlert = () => {
+        localStorage.clear()
         navigate('/')
     }
     const token = localStorage.getItem('token');
+
     const handlePostComment = async () => {
         await axios.post(`${API_URL}/info/${type}/comment`, {
             id: id, username: username, text: commentText

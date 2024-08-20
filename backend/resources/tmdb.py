@@ -8,7 +8,7 @@ client = MongoClient(Config.MONGO_URI)
 movie_db = client[Config.MOVIE_DB_NAME]
 
 # Initialize Redis client 
-redis_client = Config.redis_client
+redis_client = Config.REDIS_CLIENT
 
 # Collections
 movies_collection = movie_db['movies']
@@ -25,14 +25,14 @@ class Movies(Resource):
     """
     def get(self):
         """
-        Handles HTTP GET requests to fetch all movies from the movies collection.
+        Handles HTTP GET requests to fetch all movies from the redis if found or else it fetches
+        the data from movies collection.
 
         Returns:
             tuple: A list of all movies and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
         redis_key = 'movies'
         cached_data = redis_client.get(redis_key)
-        print("Its working")
         if cached_data:
             print('Data found in Redis')
             return eval(cached_data)
@@ -56,7 +56,8 @@ class TV_Shows(Resource):
 
     def get(self):
         """
-        Handles HTTP GET requests to fetch TV shows with specific genre IDs from the TV shows collection.
+        Handles HTTP GET requests to fetch TV shows with specific genre IDs from 
+        redis client if found or else it fetches data from the TV shows collection.
 
         Returns:
             tuple: A list of TV shows and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
@@ -87,7 +88,8 @@ class Premiere(Resource):
     """
     def get(self):
         """
-        Handles HTTP GET requests to fetch all premiere movies from the premiere collection.
+        Handles HTTP GET requests to fetch all premiere movies from redis client if found or else
+        it fetches data from the premiere collection.
 
         Returns:
             tuple: A list of premiere movies and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
@@ -117,11 +119,26 @@ class Top_Rated_Movies(Resource):
     """
     def get(self):
         """
-        Handles HTTP GET requests to fetch all top-rated movies from the top-rated movies collection.
+        Handles HTTP GET requests to fetch all top-rated movies from redis client if found or else 
+        it fetches data from the top-rated movies collection.
 
         Returns:
             tuple: A list of top-rated movies and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
+        redis_key = 'top_movies'
+        cached_data = redis_client.get(redis_key)
+        if cached_data:
+            print("Top Movies data found in Redis")
+            return eval(cached_data)
+        else:
+            try:
+                top_movies = list(top_rated_movies_collection.find({}, {'_id': 0}))
+                redis_client.setex(redis_key, 3600, str(top_movies))
+                print("Top rated movies fetched from the database")
+                return top_movies, 200
+            except Exception as e:
+                print(f"Error fetching top-rated movies: {e}")
+                return {"message": "An error occurred while fetching top-rated movies."}, 500
         redis_key = 'top_movies'
         cached_data = redis_client.get(redis_key)
         if cached_data:
@@ -148,7 +165,8 @@ class Movie_By_Genre(Resource):
 
     def get(self, genre_id):
         """
-        Handles HTTP GET requests to fetch movies by a specific genre from the movies collection.
+        Handles HTTP GET requests to fetch movies by a specific genre from redis client or else it 
+        fetches data from the movies collection.
 
         Args:
             genre_id (int): The genre ID to filter movies by.
@@ -182,7 +200,8 @@ class TV_Show_By_Genre(Resource):
 
     def get(self, genre_id):
         """
-        Handles HTTP GET requests to fetch TV shows by a specific genre from the TV shows collection.
+        Handles HTTP GET requests to fetch TV shows by a specific genre from redis client or else it 
+        fetches data from the TV shows collection.
 
         Args:
             genre_id (int): The genre ID to filter TV shows by.

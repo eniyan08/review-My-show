@@ -22,9 +22,13 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_URI=mongodb://mongodb:27017/rms_database
+      - TMDB_API_KEY=c977679de6afcab8e7a9312fea820565
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - mongodb
+      - redis
     volumes:
       - ./backend:/backend
     networks:
@@ -40,5 +44,15 @@ services:
       my_network:
 
 
+  redis:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - my_network
+
 volumes:
   mongo-data:
+  redis-data:

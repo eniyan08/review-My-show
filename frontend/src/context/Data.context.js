@@ -8,24 +8,7 @@ export const DataProvider = ({ children }) => {
     // const API_URL = '/api';
     const API_URL = 'http://localhost:5000';
 
-    // Home data
-    // const [popularMovies, setPopularMovies] = useState(() => {
-    //     const savedPopularMoviesData = localStorage.getItem('popularMovies');
-    //     return savedPopularMoviesData ? JSON.parse(savedPopularMoviesData) : null;
-    // })
-    // const [premiereShows, setPremiereShows] = useState(() => {
-    //     const savedPremiereShowsData = localStorage.getItem('premiereShows');
-    //     return savedPremiereShowsData ? JSON.parse(savedPremiereShowsData) : null;
-    // })
-    // const [popularTvshows, setPopularTvshows] = useState(() => {
-    //     const savedPopularTvshowsData = localStorage.getItem('popularTvshows');
-    //     return savedPopularTvshowsData ? JSON.parse(savedPopularTvshowsData) : null;
-    // })
-    // const [anime, setAnime] = useState(() => {
-    //     const savedAnimeData = localStorage.getItem('anime');
-    //     return savedAnimeData ? JSON.parse(savedAnimeData) : null;
-    // })
-
+    // Home Data
     const [popularMovies, setPopularMovies] = useState(null)
     const [premiereShows, setPremiereShows] = useState(null)
     const [popularTvshows, setPopularTvshows] = useState(null)
@@ -62,11 +45,6 @@ export const DataProvider = ({ children }) => {
             const premiereResponse = await axios.get(`${API_URL}/tmdb/premiere`);
             const tvResponse = await axios.get(`${API_URL}/tmdb/tv_shows`);
             const animeResponse = await axios.get(`${API_URL}/tmdb/tv_shows/genre/16`);
-
-            // localStorage.setItem('popularMovies', JSON.stringify(movieResponse.data));
-            // localStorage.setItem('premiereShows', JSON.stringify(premiereResponse.data));
-            // localStorage.setItem('popularTvshows', JSON.stringify(tvResponse.data));
-            // localStorage.setItem('anime', JSON.stringify(animeResponse.data));
 
             setPopularMovies(movieResponse.data);
             setPremiereShows(premiereResponse.data);
@@ -120,21 +98,6 @@ export const DataProvider = ({ children }) => {
 
     const clearData = useCallback(() => {
         localStorage.clear()
-        setPopularMovies(null);
-        setPremiereShows(null);
-        setPopularTvshows(null);
-        setAnime(null);
-        setActionMovies(null);
-        setComedyMovies(null);
-        setCrimeMovies(null);
-        setHorrorMovies(null);
-        setSfMovies(null);
-        setActionShows(null);
-        setComedyShows(null);
-        setCrimeShows(null);
-        setHorrorShows(null);
-        setSfShows(null);
-
     }, []);
 
     return (

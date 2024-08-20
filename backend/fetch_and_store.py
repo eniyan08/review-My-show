@@ -47,20 +47,37 @@ def fetch_and_store():
     # Fetch and store popular movies (5 pages)
     for page in range(1,6):
         movies = fetch_data('movie/popular', {'api_key': TMDB_API_KEY, 'page': {page}})
-        movies_collection.insert_many(movies)
+        for movie in movies:
+            if not movies_collection.find_one({'id': movie['id']}):
+                movies_collection.insert_one(movie)
+            else:
+                continue
+        
     
     # Fetch and store top-rated TV shows (5 pages)
     for page in range(1,6):
         tv_shows = fetch_data('tv/top_rated', {'api_key': TMDB_API_KEY, 'page': {page}})
-        tv_shows_collection.insert_many(tv_shows)
+        for show in tv_shows:
+            if not tv_shows_collection.find_one({'id': show['id']}):
+                tv_shows_collection.insert_one(show)
+            else:
+                continue
     
     # Fetch and store upcoming premieres (1 page)
     premieres = fetch_data('movie/upcoming', {'api_key': TMDB_API_KEY, 'page': 1})
-    premiere_collection.insert_many(premieres)
+    for premiere in premieres:
+            if not premiere_collection.find_one({'id': premiere['id']}):
+                premiere_collection.insert_one(premiere)
+            else:
+                continue
 
     # Fetch and store top-rated movies (1 page)
     top_rated_movies = fetch_data('movie/top_rated', {'api_key': TMDB_API_KEY, 'page': 1})
-    top_rated_movies_collection.insert_many(top_rated_movies)
+    for movie in top_rated_movies:
+            if not top_rated_movies_collection.find_one({'id': movie['id']}):
+                top_rated_movies_collection.insert_one(movie)
+            else:
+                continue
 
     print("Successfully fetched Movie database")
 

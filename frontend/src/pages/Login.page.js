@@ -26,7 +26,9 @@ const Login = () => {
 
     const validate = () => {
         const errors = {}
-        if (!form.username_or_email) errors.username_or_email = 'Username or Email is required'
+        if (!form.username_or_email) {
+            errors.username_or_email = 'Username or Email is required'
+        }
         if (!form.password) errors.password = 'Password is required'
         return errors
     }
@@ -48,7 +50,7 @@ const Login = () => {
                     localStorage.setItem('username', username)
                     localStorage.setItem('expiryTime', expiryTime)
                 }
-                setToken(token, username, 3600) // token expires in 1 minute
+                setToken(token, username, 3600) // token expires in 1 hour
                 setForm({
                     username_or_email: '',
                     password: ''
