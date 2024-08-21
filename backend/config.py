@@ -24,7 +24,7 @@ class Config:
     """
 
     # MongoDB setup
-    MONGO_URI = os.getenv('MONGO_URI')
+    MONGO_URI = os.getenv("MONGO_URI")
     # Database names
     USER_DB_NAME = 'user_db'
     MOVIE_DB_NAME = 'movie_db'
