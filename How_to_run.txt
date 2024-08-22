@@ -1,0 +1,22 @@
+Frontend
+
+cd frontend
+serve -s build
+
+Backend 
+
+cd backend
+venv/Scripts/activate
+python app.py
+
+Redis Server
+
+if container doesnt exist
+docker run --name redis-server -p 6380:6379 -it redis/redis-stack-server:latest
+
+if container named redis-server exist
+docker start redis-server
+
+to check the contents inside redis
+npx redis cli
+get movies
