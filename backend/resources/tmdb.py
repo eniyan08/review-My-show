@@ -126,19 +126,6 @@ class Top_Rated_Movies(Resource):
             tuple: A list of top-rated movies and HTTP status code 200, or an error message and HTTP status code 500 if an error occurs.
         """
         redis_key = 'top_movies'
-        cached_data = redis_client.get(redis_key)
-        if cached_data:
-            print("Top Movies data found in Redis")
-            return eval(cached_data)
-        else:
-            try:
-                top_movies = list(top_rated_movies_collection.find({}, {'_id': 0}))
-                redis_client.setex(redis_key, 3600, str(top_movies))
-                print("Top rated movies fetched from the database")
-                return top_movies, 200
-            except Exception as e:
-                print(f"Error fetching top-rated movies: {e}")
-                return {"message": "An error occurred while fetching top-rated movies."}, 500
         redis_key = 'top_movies'
         cached_data = redis_client.get(redis_key)
         if cached_data:

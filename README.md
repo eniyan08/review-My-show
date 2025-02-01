@@ -31,7 +31,9 @@ Movie data is fetched from The Movie Database (TMDB) API and stored in MongoDB. 
 3. Start the development server.
 
     ```bash
-    npm start
+    npm start 
+    or 
+    serve -s build
     ```
 
 ### Backend
@@ -69,6 +71,13 @@ Movie data is fetched from The Movie Database (TMDB) API and stored in MongoDB. 
 
     ```bash
     python app.py
+    ```
+
+7. Start the Redis server.
+
+    ```bash
+    sudo service redis-server start
+    redis-cli ping
     ```
 
 ### Database
