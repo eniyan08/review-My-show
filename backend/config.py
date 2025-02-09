@@ -35,7 +35,7 @@ class Config:
     
     TMDB_API_KEY = os.environ.get('TMDB_API_KEY', 'default_tmdb_api_key')
     TMDB_BASE_URL = 'https://api.themoviedb.org/3' 
-
+    TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/original'
     # Redis client setup
     REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
     REDIS_PORT = os.getenv('REDIS_PORT', 6379)

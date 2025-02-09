@@ -10,6 +10,10 @@
         {
             "src": "/(.*)",
             "dest": "app.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/static/index.html"
         }
     ]
 }

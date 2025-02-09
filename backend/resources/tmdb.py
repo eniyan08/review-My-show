@@ -2,19 +2,34 @@ from flask import jsonify
 from flask_restful import Resource
 from pymongo import MongoClient
 from config import Config
+from resources.fetch_and_store import Fetch_From_TMDB
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+import certifi
 
-# Initialize MongoDB client and database
-client = MongoClient(Config.MONGO_URI)
-movie_db = client[Config.MOVIE_DB_NAME]
+try:
+    # Initialize MongoDB client and database
+    client = MongoClient(
+        Config.MONGO_URI,
+        tls=True,
+        tlsCAFile=certifi.where()
+    )
+    client.admin.command('ping')
+    movie_db = client[Config.MOVIE_DB_NAME]
 
-# Initialize Redis client 
-redis_client = Config.REDIS_CLIENT
+    # Initialize Redis client 
+    redis_client = Config.REDIS_CLIENT
 
-# Collections
-movies_collection = movie_db['movies']
-tv_shows_collection = movie_db['tv_shows']
-premiere_collection = movie_db['premiere']
-top_rated_movies_collection = movie_db['top_rated_movies']
+    # Collections
+    movies_collection = movie_db['movies']
+    tv_shows_collection = movie_db['tv_shows']
+    premiere_collection = movie_db['premiere']
+    top_rated_movies_collection = movie_db['top_rated_movies']
+    print("Connected to MongoDB successfully - tmdb.py   !")
+
+except (ConnectionFailure, ServerSelectionTimeoutError) as e:
+    print(f"Failed to connect to MongoDB: {e} - tmdb.py")
+    raise
+
 
 class Movies(Resource):
     """
@@ -38,6 +53,9 @@ class Movies(Resource):
             return eval(cached_data)
         else:
             try:
+                if not len(list(movies_collection.find())):
+                    fetch_data = Fetch_From_TMDB()
+                    fetch_data.fetch_and_store()
                 movies = list(movies_collection.find({}, {'_id': 0}))
                 redis_client.setex(redis_key, 3600, str(movies))
                 print("Movies fetched from the database")

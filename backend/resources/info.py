@@ -4,18 +4,48 @@ from pymongo import MongoClient
 from config import Config
 from bson.objectid import ObjectId
 from resources.decorator import token_required
+import certifi
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
-# Initialize MongoDB client and database
-client = MongoClient(Config.MONGO_URI)
-movie_db = client[Config.MOVIE_DB_NAME]
-interaction_db = client[Config.INTERACTION_DB_NAME]
 
-# Collections
-movies_collection = movie_db['movies']
-tv_shows_collection = movie_db['tv_shows']
-premiere_collection = movie_db['premiere']
-top_rated_movies_collection = movie_db['top_rated_movies']
-interactions_collection = interaction_db['interactions']
+# # Initialize MongoDB client and database
+# client = MongoClient(Config.MONGO_URI)
+# movie_db = client[Config.MOVIE_DB_NAME]
+# interaction_db = client[Config.INTERACTION_DB_NAME]
+
+# # Collections
+# movies_collection = movie_db['movies']
+# tv_shows_collection = movie_db['tv_shows']
+# premiere_collection = movie_db['premiere']
+# top_rated_movies_collection = movie_db['top_rated_movies']
+# interactions_collection = interaction_db['interactions']
+
+try:
+    client = MongoClient(
+        Config.MONGO_URI,
+        tls=True,
+        tlsCAFile=certifi.where()
+    )
+    
+    # Test the connection
+    client.admin.command('ping')
+    
+    # Initialize databases
+    movie_db = client[Config.MOVIE_DB_NAME]
+    interaction_db = client[Config.INTERACTION_DB_NAME]
+
+    # Initialize collections
+    movies_collection = movie_db['movies']
+    tv_shows_collection = movie_db['tv_shows']
+    premiere_collection = movie_db['premiere']
+    top_rated_movies_collection = movie_db['top_rated_movies']
+    interactions_collection = interaction_db['interactions']
+    
+    print("Connected to MongoDB successfully - info.py  !")
+
+except (ConnectionFailure, ServerSelectionTimeoutError) as e:
+    print(f"Failed to connect to MongoDB: {e} - info.py ")
+    raise
 
 class Info(Resource):
     """

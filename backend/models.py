@@ -1,17 +1,30 @@
 from pymongo import MongoClient, errors
 import bcrypt
 from config import Config
+import certifi
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
 # Constants for TMDB API
 TMDB_API_KEY = Config.TMDB_API_KEY
 TMDB_BASE_URL = Config.TMDB_BASE_URL
 
-# Database setup
-client = MongoClient(Config.MONGO_URI)
-user_db = client[Config.USER_DB_NAME]
+try:
+    # Database setup
+    client = MongoClient(
+        Config.MONGO_URI,
+        tls=True,
+        tlsCAFile=certifi.where()
+    )
+    client.admin.command('ping')
+    user_db = client[Config.USER_DB_NAME]
 
-# Collections
-users_collection = user_db['users']
+    # Collections
+    users_collection = user_db['users']
+    print("Connected to MongoDB successfully - models.py  !")
+
+except (ConnectionFailure, ServerSelectionTimeoutError) as e:
+    print(f"Failed to connect to MongoDB: {e} - models.py")
+    raise
 
 
 # utility functions
