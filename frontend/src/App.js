@@ -14,7 +14,7 @@ import { DataProvider } from './context/Data.context';
 // Import css files
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import { SpeedInsights } from "@vercel/speed-insights/react"
 function App() {
   return (
     <DataProvider>
@@ -30,6 +30,7 @@ function App() {
 
         </Routes>
       </Router>
+      <SpeedInsights />
     </DataProvider>
   );
 }
